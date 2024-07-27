@@ -9,29 +9,47 @@ from sys import argv
 from os import get_terminal_size
 
 
-NAME = "pybonsai"
+NAME = "PyBonsai"
 VERSION = "1.0.0"
+DESC = "PyBonsai procedurally generates ASCII art trees in your terminal."
 
 
 DEFAULT_WIDTH = 80
 DEFAULT_HEIGHT = 35
 
 
-VALID_ARGS = {
-    ("-h", "--help") : "show help",
-    ("-s", "--seed") : "seed for the random number generator",
-    ("-t", "--type") : "tree type: 0 - classic tree, 1 - fibonacci tree, 2 - offset fibonacci tree, 3 - random fibonacci tree [default random]",
-    ("-y", "--height") : f"maximum height of the tree [default {DEFAULT_HEIGHT}]",
-    ("-x", "--width") : f"maximum width of the tree [default {DEFAULT_WIDTH}]",
-    ("-l", "--layers") : f"number of branch layers: more => more branches [default {tree.Params.NUM_LAYERS}]",
-    ("-S", "--start-len") : f"length of the root branch [default {tree.Params.INITIAL_LEN}]",
-    ("-i", "--instant") : "instant mode: only display finished tree",
-    ("-w", "--wait") : f"time delay between drawing characters [default {tree.Params.WAIT_TIME}]",
-    ("-L", "--leaf-len") : f"length of each leaf [default {tree.Params.LEAF_LEN}]",
-    ("-a", "--angle") : f"mean angle of branches to their parent, in degrees; more => more arched trees [default {tree.Params.ANGLE_MEAN}]",
-    ("-c", "--branch-chars") : f"string of chars randomly chosen for branches [default {tree.Params.BRANCH_CHARS}]",
-    ("-C", "--leaf-chars") : f"string of chars randomly chosen for leaves [default {tree.Params.LEAF_CHARS}]",
-    ("  ", "--version") : "display version"
+ARG_OPTIONS = {
+    "help" : ("-h", "--help"),
+    "version" : ("--version",),
+    "instant mode" : ("-i", "--instant"),
+    "branch chars" : ("-c", "--branch-chars"),
+    "leaf chars" : ("-C", "--leaf-chars"),
+    "wait time" : ("-w", "--wait"),
+    "width" : ("-x", "--width"),
+    "height" : ("-y", "--height"),
+    "type" : ("-t", "--type"),
+    "seed" : ("-s", "--seed"),
+    "start len" : ("-S", "--start-len"),
+    "leaf len" : ("-L", "--leaf-len"),
+    "layers" : ("-l", "--layers"),
+    "angle" : ("-a", "--angle")
+}
+
+ARG_DESCS = {
+    "help" : "display help",
+    "version" : "display version",
+    "instant mode" : "instant mode: display finished tree immediately",
+    "branch chars" : f"string of chars randomly chosen for branches [default {tree.Params.BRANCH_CHARS}]",
+    "leaf chars" : f"string of chars randomly chosen for leaves [default {tree.Params.LEAF_CHARS}]",
+    "wait time" : f"time delay between drawing characters when not in instant mode [default {tree.Params.WAIT_TIME}]",
+    "width" : f"maximum width of the tree [default {DEFAULT_WIDTH}]",
+    "height" : f"maximum height of the tree [default {DEFAULT_HEIGHT}]",
+    "type" : "tree type: integer between 0 and 3 inclusive [default random]",
+    "seed" : "seed for the random number generator",
+    "start len" : f"length of the root branch [default {tree.Params.INITIAL_LEN}]",
+    "leaf len" : f"length of each leaf [default {tree.Params.LEAF_LEN}]",
+    "layers" : f"number of branch layers: more => more branches [default {tree.Params.NUM_LAYERS}]",
+    "angle" : f"mean angle of branches to their parent, in degrees; more => more arched trees [default {tree.Params.ANGLE_MEAN}]"
 }
 
 
@@ -62,8 +80,7 @@ def get_arg_value(args, inx):
     
 
 def parse_string(string):
-    #potentially remove outside quotation marks
-
+    #remove outside quotation marks (if there are any)
     if len(string) < 2:
         return string
 
@@ -76,23 +93,42 @@ def parse_string(string):
 
 
 def show_help():
-    print(f"USEAGE: {NAME} [OPTION]")
+    print(f"USEAGE: {NAME.lower()} [OPTION]...\n")
+    print(f"{DESC}\n")
 
     max_len = 0
-    for option_name in VALID_ARGS:
-        total_len = sum([len(i) for i in option_name])
+    for option_names in ARG_OPTIONS.values():
+        total_len = sum([len(i) for i in option_names])
 
         if total_len > max_len:
             max_len = total_len
 
     print("OPTIONS:")
-    for name, desc in VALID_ARGS.items():
-        option_names = ", ".join(name)
-        total_len = sum([len(i) for i in name])
+    for i in ARG_OPTIONS:
+        show_option_help(i, max_len)
 
-        num_space = max_len - total_len + 3
 
-        print(f"{option_names}{" " * num_space}{desc}")
+def show_option_help(option, max_len):
+    long_option = None
+    short_option = None
+
+    #find the short and long option from the pair
+    for option_flag in ARG_OPTIONS[option]:
+        if option_flag[:2] == "--":
+            long_option = option_flag
+        else:
+            short_option = option_flag
+
+    if short_option is None:
+        option_names = f"    {long_option}"
+    elif long_option is None:
+        option_names = f"{short_option}"
+    else:
+        option_names = f"{short_option}, {long_option}"
+
+    num_space = max_len - len(option_names) + 5
+
+    print(f"{option_names}{" " * num_space}{ARG_DESCS[option]}")
 
 
 def show_version():
@@ -114,14 +150,14 @@ def get_window_size(args):
     width_default = min(term_w, DEFAULT_WIDTH)
     height_default = min(term_h, DEFAULT_HEIGHT)
 
-    width = int(check_arg_set(args, ("-x", "--width"), width_default))
-    height = int(check_arg_set(args, ("-y", "--height"), height_default))
+    width = int(check_arg_set(args, ARG_OPTIONS["width"], width_default))
+    height = int(check_arg_set(args, ARG_OPTIONS["height"], height_default))
 
     return width, height
 
 
 def get_tree_type(args):
-    type = int(check_arg_set(args, ("-t", "--type"), random.randint(0, 3)))
+    type = int(check_arg_set(args, ARG_OPTIONS["type"], random.randint(0, 3)))
 
     if not 0 <= type <= 3:
         raise Exception("Invalid type - choose integer between 0 and 3 (inclusive)")
@@ -129,14 +165,14 @@ def get_tree_type(args):
     return type
 
 
-get_num_layers = lambda args: int(check_arg_set(args, ("-l", "--layers"), tree.Params.NUM_LAYERS))
-get_initial_len = lambda args: int(check_arg_set(args, ("-S", "--start-len"), tree.Params.INITIAL_LEN))
-get_instant_mode = lambda args: check_arg_set(args, ("-i", "--instant"), False)
-get_wait_time = lambda args: float(check_arg_set(args, ("-w", "--wait"), tree.Params.WAIT_TIME))
-get_leaf_len = lambda args: int(check_arg_set(args, ("-L", "--leaf-len"), tree.Params.LEAF_LEN))
-get_angle_mean = lambda args: float(check_arg_set(args, ("-a", "--angle"), tree.Params.ANGLE_MEAN))
-get_branch_chars = lambda args: parse_string(check_arg_set(args, ("-c", "--branch-chars"), tree.Params.BRANCH_CHARS))
-get_leaf_chars = lambda args: parse_string(check_arg_set(args, ("-C", "--leaf-chars"), tree.Params.LEAF_CHARS))
+get_num_layers = lambda args: int(check_arg_set(args, ARG_OPTIONS["layers"], tree.Params.NUM_LAYERS))
+get_initial_len = lambda args: int(check_arg_set(args, ARG_OPTIONS["start len"], tree.Params.INITIAL_LEN))
+get_instant_mode = lambda args: check_arg_set(args, ARG_OPTIONS["instant mode"], False)
+get_wait_time = lambda args: float(check_arg_set(args, ARG_OPTIONS["wait time"], tree.Params.WAIT_TIME))
+get_leaf_len = lambda args: int(check_arg_set(args, ARG_OPTIONS["leaf len"], tree.Params.LEAF_LEN))
+get_angle_mean = lambda args: float(check_arg_set(args, ARG_OPTIONS["angle"], tree.Params.ANGLE_MEAN))
+get_branch_chars = lambda args: parse_string(check_arg_set(args, ARG_OPTIONS["branch chars"], tree.Params.BRANCH_CHARS))
+get_leaf_chars = lambda args: parse_string(check_arg_set(args, ARG_OPTIONS["leaf chars"], tree.Params.LEAF_CHARS))
 
 
 def set_seed(args):
@@ -185,10 +221,10 @@ def get_tree(window, args):
 def main():
     args = parse_args()
 
-    if "-h" in args or "--help" in args:
+    if check_arg_set(args, ARG_OPTIONS["help"], False):
         show_help()
         return
-    elif "--version" in args:
+    elif check_arg_set(args, ARG_OPTIONS["version"], False):
         show_version()
         return
 
