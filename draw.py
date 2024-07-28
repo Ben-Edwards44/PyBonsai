@@ -27,7 +27,24 @@ class TerminalWindow:
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(width)] for _ in range(height)]
 
     colour_char = lambda self, char, r, g, b: f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}"  #ANSI escape code for 24 bit true colour (which most modern terminals support)
-    to_int = lambda self, point: [int(i) for i in point]
+
+    def extract_colour(self, coloured_char):
+        #get the rgb colour from an ANSI coloured character
+        splitted = coloured_char.split(";")
+
+        r = int(splitted[2])
+        g = int(splitted[3])
+
+        b = ""
+        for i in splitted[4]:
+            if i == "m":
+                break
+            else:
+                b += i
+
+        b = int(b)
+
+        return r, g, b
 
     def clear_chars(self):
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(self.width)] for _ in range(self.height)]
