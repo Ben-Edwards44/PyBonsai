@@ -206,14 +206,19 @@ def get_tree(window, args):
 
     root_x = window.width // 2
 
+    root_y = tree.Tree.BOX_HEIGHT + 6
+    root_y = root_y + root_y % 2  #round to nearest even number (odd numbers cause weird off-by-one errors when drawing tree bases)
+
+    root_pos = (root_x, root_y)
+
     if type == 0:
-        t = tree.ClassicTree(window, (root_x, tree.ClassicTree.BOX_HEIGHT + 6), params)
+        t = tree.ClassicTree(window, root_pos, params)
     elif type == 1:
-        t = tree.FibonacciTree(window, (root_x, tree.FibonacciTree.BOX_HEIGHT + 6), params)
+        t = tree.FibonacciTree(window, root_pos, params)
     elif type == 2:
-        t = tree.OffsetFibTree(window, (root_x, tree.OffsetFibTree.BOX_HEIGHT + 6), params)
+        t = tree.OffsetFibTree(window, root_pos, params)
     else:
-        t = tree.RandomOffsetFibTree(window, (root_x, tree.RandomOffsetFibTree.BOX_HEIGHT + 6), params)
+        t = tree.RandomOffsetFibTree(window, root_pos, params)
 
     return t
 

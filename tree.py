@@ -139,19 +139,16 @@ class Tree:
 
             self.window.set_char_instant(inx1, inx2, char, Tree.SOIL_COLOUR, True)
 
-    def draw_tree_base(self, trunk_width, trunk_angle):
+    def draw_tree_base(self, trunk_width):
         #just add some extra padding at the bottom of the trunk to look nice. Must be called after tree is grown
         inx1, inx2 = self.window.plane_to_screen(self.root_x, self.root_y)
 
         left_x = inx2 - trunk_width // 2
         right_x = inx2 + trunk_width // 2
 
-        #there is an off-by-one error for even trunk widths
+        #off-by-one error: line drawing moves left to right, causing trunk to be to the left of the center, so move the base right to compensate
         if trunk_width % 2 == 0:
-            if trunk_angle > 0:
-                left_x += 1
-            else:
-                right_x -= 1
+            right_x -= 1
 
         self.window.set_char_instant(inx1, left_x - 2, ".", (255, 255, 0), True)
         self.window.set_char_instant(inx1, left_x - 1, "/", (255, 255, 0), True)
@@ -229,7 +226,7 @@ class ClassicTree(RecursiveTree):
         initial_width, initial_angle = self.get_initial_params()
 
         self.draw_box()
-        self.draw_tree_base(initial_width, initial_angle)
+        self.draw_tree_base(initial_width)
 
         self.draw_branch(self.root_x, self.root_y, 1, self.params.initial_len, initial_width, initial_angle)
 
@@ -301,7 +298,7 @@ class FibonacciTree(RecursiveTree):
         initial_width, initial_angle = self.get_initial_params()
 
         self.draw_box()
-        self.draw_tree_base(initial_width, initial_angle)
+        self.draw_tree_base(initial_width)
 
         self.draw_branch(self.root_x, self.root_y, 1, 0, self.params.initial_len, initial_width, initial_angle)
 
