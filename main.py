@@ -39,8 +39,8 @@ ARG_DESCS = {
     "help" : "display help",
     "version" : "display version",
     "instant mode" : "instant mode: display finished tree immediately",
-    "branch chars" : f"string of chars randomly chosen for branches [default {tree.Params.BRANCH_CHARS}]",
-    "leaf chars" : f"string of chars randomly chosen for leaves [default {tree.Params.LEAF_CHARS}]",
+    "branch chars" : f"string of chars randomly chosen for branches [default '{tree.Params.BRANCH_CHARS}']",
+    "leaf chars" : f"string of chars randomly chosen for leaves [default '{tree.Params.LEAF_CHARS}']",
     "wait time" : f"time delay between drawing characters when not in instant mode [default {tree.Params.WAIT_TIME}]",
     "width" : f"maximum width of the tree [default {DEFAULT_WIDTH}]",
     "height" : f"maximum height of the tree [default {DEFAULT_HEIGHT}]",
@@ -207,7 +207,7 @@ def get_tree(window, args):
     root_x = window.width // 2
 
     root_y = tree.Tree.BOX_HEIGHT + 6
-    root_y = root_y + root_y % 2  #round to nearest even number (odd numbers cause weird off-by-one errors when drawing tree bases)
+    root_y = root_y + root_y % 2  #round to nearest even number (odd numbers cause off-by-one errors as chars are twice as tall as they are wide)
 
     root_pos = (root_x, root_y)
 
