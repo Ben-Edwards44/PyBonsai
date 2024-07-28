@@ -128,7 +128,7 @@ def show_option_help(option, max_len):
 
     num_space = max_len - len(option_names) + 5
 
-    print(f"{option_names}{" " * num_space}{ARG_DESCS[option]}")
+    print(f"{option_names}{' ' * num_space}{ARG_DESCS[option]}")
 
 
 def show_version():
