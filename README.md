@@ -73,7 +73,6 @@ The following images demonstrate the use of the different options:
 | Different characters | ![different characters](/Images/options/chars.png) |
 | Longer leaves        | ![longer leaves](/Images/options/leafy.png)        |
 
-
 ## Tree Types
 
 PyBonsai supports 4 different tree types. Unless specified with the `--type` option, the tree type will be chosen at random.
