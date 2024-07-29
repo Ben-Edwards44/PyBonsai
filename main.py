@@ -1,6 +1,29 @@
 #!/usr/bin/env python3
 
 
+"""
+             #&                                  
+           %&@&                                  
+    &%@% %&  %@|                                 
+ &&@@&%#@%_\@@&&@#       @=&                     
+&#@# #%##  ;&@%#  %@    @% &%                    
+  @  %  #&  %%~|       @%@%@&#                   
+               |;;         # %                   
+                  \\        @ % %@%#             
+                   |~     =;@ __%%               
+                   =|   ~_=___  %&#              
+                   || /~         % #             
+                   |//           &               
+                   |=                            
+                   ~|                            
+                   ;|                            
+    .---.        ./||\.   .-.     
+
+    I speak for the trees, for the trees have no voice.
+    - The Lorax, 1971
+"""
+
+
 import draw
 import tree
 
