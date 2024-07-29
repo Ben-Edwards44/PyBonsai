@@ -2,7 +2,7 @@
 
 PyBonsai is a Python script that generates procedural ASCII art trees in the comfort of your terminal.
 
-![demo](/Images/demo.gif)
+<img src="/Images/demo.gif" align="right">
 
 ## About
 
@@ -65,10 +65,13 @@ Run `pybonsai --help` for useage:
 
 The following images demonstrate the use of the different options:
 
-![big tree](/Images/big.png)
+| Effect               | Image                                      |
+|----------------------|--------------------------------------------|
+| Big tree             | ![big tree](/Images/big.png)               |
+| Different characters | ![different characters](/Images/chars.png) |
+| Longer leaves        | ![longer leaves](/Images/leafy.png)        |
 
-![different characters](/Images/chars.png)
-
-![longer leaves](/Images/leafy.png)
 
 ## Tree Types
+
+tbc...
