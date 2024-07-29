@@ -2,9 +2,9 @@
 
 PyBonsai is a Python script that generates procedural ASCII art trees in the comfort of your terminal.
 
-<img src="/Images/demo.gif" align="right" width="450px">
-
 ## About
+
+<img src="/Images/demo.gif" align="right" width="450px">
 
 PyBonsai is inspired by the amazing [cbonsai](https://gitlab.com/jallbrit/cbonsai) repository.
 Whereas cbonsai grows bonsai trees, PyBonsai trees look more like trees you would find in a forest (oak, ash and so on).
