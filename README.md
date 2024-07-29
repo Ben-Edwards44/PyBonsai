@@ -13,6 +13,8 @@ The trees are configurable via CLI options to make them different sizes, more or
 
 Currently, PyBonsai supports 4 different types of tree. Details of these are shown in the [tree types](#tree-types) section.
 
+PyBonsai uses [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) for colouring characters. Almost all modern terminals will support this but, if yours does not, PyBonsai will not work.
+
 ## Installation
 
 Requirements:
