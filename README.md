@@ -29,8 +29,7 @@ To use PyBonsai, you need to first clone the repository:
 To install for all users, run the included `install.sh` script to create a symlink in `/usr/local/bin`
 
     cd PyBonsai
-    sudo chmod +x install.sh
-    sudo ./install.sh
+    sudo bash install.sh
 
 Verify the installation by running:
 
