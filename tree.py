@@ -4,6 +4,7 @@ import random
 
 
 class Tree:
+    #base tree class - not a drawable tree
     BOX_HEIGHT = 3
     MAX_TOP_WIDTH = 35
 
@@ -126,6 +127,7 @@ class Tree:
         self.window.set_char_instant(inx1, right_x + 2, ".", (255, 255, 0), True)
 
 class RecursiveTree(Tree):
+    #all recursive tree types are based off of the fractal canopy: https://en.wikipedia.org/wiki/Fractal_canopy
     ANGLE_STD_DEV = math.radians(8)
 
     LEN_SCALE = 0.75
@@ -183,14 +185,14 @@ class ClassicTree(RecursiveTree):
         new_length = length * ClassicTree.LEN_SCALE
 
         for i in range(num_branches):
-            dist_up_branch = (i + 1) * step
+            dist_up_branch = (i + 1) * step  #branches are linearly distributed along the parent
             new_theta = theta + sign * random.normalvariate(self.options.angle_mean, ClassicTree.ANGLE_STD_DEV)
 
-            x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)
+            x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)  #start point of new branch
 
             self.draw_branch(x, y, layer + 1, new_length, new_width, new_theta)
 
-            sign *= -1
+            sign *= -1  #ensure next branch is on opposite side of the parent
 
     def draw(self):
         initial_width, initial_angle = self.get_initial_params()
@@ -218,7 +220,8 @@ class FibonacciTree(RecursiveTree):
         return fib
     
     def generate_branch_nums(self):
-        branch_nums = [[1]]
+        #generate the number of child branches branching off of each parent
+        branch_nums = [[1]]  #1st index is the layer from the root, 2nd index is the position of the parent branch in its layer
         for i in range(self.options.num_layers):
             num_branches = self.fib[i + 2]
             num_parents = sum(branch_nums[-1])
@@ -248,6 +251,7 @@ class FibonacciTree(RecursiveTree):
         self.draw_end_branches(x, y, layer_inx, branch_inx, length, width, theta)
 
     def draw_end_branches(self, start_x, start_y, layer_inx, branch_inx, length, width, theta):
+        #draw the child branches off of the end of the parent branch
         sign = 1
         num_branches = self.branch_nums[layer_inx][branch_inx]
         new_width = max(1, width - 1)
@@ -288,7 +292,7 @@ class OffsetFibTree(FibonacciTree):
         new_length = length * ClassicTree.LEN_SCALE
 
         for i in range(num_branches):
-            dist_up_branch = (i + 1) * step
+            dist_up_branch = (i + 1) * step  #branches are now linearly distributed along the parent branch
             new_theta = theta + sign * random.normalvariate(self.options.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
 
             x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)
@@ -320,9 +324,11 @@ class RandomOffsetFibTree(FibonacciTree):
             grow_at_end = random.uniform(0, 1) < RandomOffsetFibTree.GROW_END_THRESHOLD
 
             if grow_at_end:
+                #this branch will grow at the end of the parent, so do not draw leaves at the end of the parent
                 need_leaves = False
                 dist_up_branch = length
             else:
+                #this branch will grow at a random distance along the parent (not the end), so we may need leaves at the end of the parent
                 dist_up_branch = random.uniform(length * RandomOffsetFibTree.NON_END_MIN, length * RandomOffsetFibTree.NON_END_MAX)
 
             new_theta = theta + sign * random.normalvariate(self.options.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
@@ -334,7 +340,7 @@ class RandomOffsetFibTree(FibonacciTree):
             sign *= -1
 
         if need_leaves:
-            #no branches have grown at the end of this one, so we can grow leaves
+            #no branches have grown at the end of the parent, so we can grow leaves
             end_pos = self.get_end_coords(start_x, start_y, length, theta)
 
             leaves = Leaves(self.window, end_pos, self.options)
@@ -353,7 +359,7 @@ class Leaves:
         g = utils.Vector(0, -1)
 
         for _ in range(Leaves.NUM_LEAVES):
-            vel = utils.Vector(random.uniform(-1, 1), random.uniform(-1, 1))
+            vel = utils.Vector(random.uniform(-1, 1), random.uniform(-1, 1))  #random starting velocity for the leaves to step along
             vel.normalise()
             pos = utils.Vector(self.branch_x, self.branch_y)
 
@@ -368,5 +374,6 @@ class Leaves:
                 else:
                     self.window.set_char_wait(pos.x, pos.y, char, colour, False, self.options.wait_time)
 
+                #make the leaves droop downwards by adding some gravity force
                 weight = i / self.options.leaf_len
                 vel += g * weight
