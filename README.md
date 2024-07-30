@@ -1,21 +1,23 @@
-# PyBonsai
+# PyBonsai :palm_tree:
 
 PyBonsai is a Python script that generates procedural ASCII art trees in the comfort of your terminal.
 
-## About
+## About :seedling:
 
 <img src="/Images/demo.gif" align="right" width="450px">
 
 PyBonsai is inspired by the amazing [cbonsai](https://gitlab.com/jallbrit/cbonsai) repository.
 Whereas cbonsai grows bonsai trees, PyBonsai trees look more like trees you would find in a forest (oak, ash and so on).
 
-The trees are configurable via CLI options to make them different sizes, more or less complex, grow at different rates, or use a different set of characters. See [useage](#useage) for more information.
+The trees are configurable via CLI options to make them different sizes, more or less complex, grow at different rates, or use a different set of characters. See [useage](#useage-wrench) for more information.
 
-Currently, PyBonsai supports 4 different types of tree. Details of these are shown in the [tree types](#tree-types) section.
+Currently, PyBonsai supports 4 different types of tree. Details of these are shown in the [tree types](#tree-types-leaves) section.
 
 PyBonsai uses [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) for colouring characters. Almost all modern terminals will support this but, if yours does not, PyBonsai will not work.
 
-## Installation
+If you encounter an issue with PyBonsai, or have an idea for an improvement, do not be afraid to open an issue.
+
+## Installation :link:
 
 Requirements:
 - Python 3.9 or greater
@@ -40,7 +42,7 @@ Verify the installation by running:
 Please note that I have only tested PyBonsai on Ubuntu, but I see no reason why it would not work on Windows or Mac OS.
 To install PyBonsai, you will need to clone the repository and add it to your system's PATH.
 
-## Useage
+## Useage :wrench:
 
 Run `pybonsai --help` for useage:
 
@@ -72,7 +74,7 @@ The following images demonstrate the use of the different options:
 | Different characters | ![different characters](/Images/options/chars.png) |
 | Longer leaves        | ![longer leaves](/Images/options/leafy.png)        |
 
-## Tree Types
+## Tree Types :leaves:
 
 PyBonsai supports 4 different tree types. Unless specified with the `--type` option, the tree type will be chosen at random.
 
