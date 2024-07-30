@@ -3,36 +3,6 @@ import utils
 import random
 
 
-class Params:
-    #stores all parameters that can be edited via the command line arguments
-    
-    #default values
-    NUM_LAYERS = 8
-    INITIAL_LEN = 15
-    ANGLE_MEAN = 40
-
-    LEAF_LEN = 4
-
-    INSTANT = False
-    WAIT_TIME = 0
-
-    BRANCH_CHARS = "~;:="
-    LEAF_CHARS = "&%#@"
-    
-    def __init__(self, initial_len, num_layers, angle_mean, leaf_len, instant, wait_time, branch_chars, leaf_chars):
-        self.initial_len = initial_len
-        self.num_layers = num_layers
-        self.angle_mean = math.radians(angle_mean)
-
-        self.leaf_len = leaf_len
-
-        self.instant = instant
-        self.wait_time = wait_time
-
-        self.branch_chars = branch_chars
-        self.leaf_chars = leaf_chars
-
-
 class Tree:
     BOX_HEIGHT = 3
     MAX_TOP_WIDTH = 35
@@ -50,10 +20,10 @@ class Tree:
 
     BRANCH_COLOUR = ((200, 255), (150, 255), (0, 0))  #range of rgb values
 
-    def __init__(self, window, root_pos, params):
+    def __init__(self, window, root_pos, options):
         self.window = window
         self.root_x, self.root_y = root_pos
-        self.params = params
+        self.options = options
 
         self.box_top_width = self.get_box_width()
 
@@ -162,8 +132,8 @@ class RecursiveTree(Tree):
 
     MAX_INITIAL_WIDTH = 6
 
-    def __init__(self, window, root_pos, params):
-        super().__init__(window, root_pos, params)
+    def __init__(self, window, root_pos, options):
+        super().__init__(window, root_pos, options)
 
     def get_end_coords(self, start_x, start_y, length, theta):
         x = start_x + length * math.sin(theta)
@@ -172,7 +142,7 @@ class RecursiveTree(Tree):
         return x, y
     
     def get_initial_params(self):
-        initial_width = self.params.initial_len // 6
+        initial_width = self.options.initial_len // 6
         initial_angle = random.normalvariate(0, RecursiveTree.ANGLE_STD_DEV)
 
         #ensure the width is in a suitable range
@@ -187,19 +157,19 @@ class ClassicTree(RecursiveTree):
     MEAN_BRANCHES = 2
     BRANCHES_STD_DEV = 0.5
 
-    def __init__(self, window, root_pos, params):
-        super().__init__(window, root_pos, params)
+    def __init__(self, window, root_pos, options):
+        super().__init__(window, root_pos, options)
 
     def draw_branch(self, x, y, layer, length, width, theta):
-        if layer >= self.params.num_layers:
-            leaves = Leaves(self.window, (x, y), self.params)
+        if layer >= self.options.num_layers:
+            leaves = Leaves(self.window, (x, y), self.options)
             leaves.draw()
 
             return
         
         end_x, end_y = self.get_end_coords(x, y, length, theta)
 
-        self.window.draw_line((x, y), (end_x, end_y), ClassicTree.BRANCH_COLOUR, round(width), self.params)
+        self.window.draw_line((x, y), (end_x, end_y), ClassicTree.BRANCH_COLOUR, round(width), self.options)
 
         self.draw_end_branches(x, y, layer, length, width, theta)
 
@@ -214,7 +184,7 @@ class ClassicTree(RecursiveTree):
 
         for i in range(num_branches):
             dist_up_branch = (i + 1) * step
-            new_theta = theta + sign * random.normalvariate(self.params.angle_mean, ClassicTree.ANGLE_STD_DEV)
+            new_theta = theta + sign * random.normalvariate(self.options.angle_mean, ClassicTree.ANGLE_STD_DEV)
 
             x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)
 
@@ -228,13 +198,13 @@ class ClassicTree(RecursiveTree):
         self.draw_box()
         self.draw_tree_base(initial_width)
 
-        self.draw_branch(self.root_x, self.root_y, 1, self.params.initial_len, initial_width, initial_angle)
+        self.draw_branch(self.root_x, self.root_y, 1, self.options.initial_len, initial_width, initial_angle)
 
 
 class FibonacciTree(RecursiveTree):
     #trees with a fibonacci number of branches on each layer
-    def __init__(self, window, root_pos, params):
-        super().__init__(window, root_pos, params)
+    def __init__(self, window, root_pos, options):
+        super().__init__(window, root_pos, options)
 
         self.fib = self.fib_nums()
         self.branch_nums = self.generate_branch_nums()
@@ -242,14 +212,14 @@ class FibonacciTree(RecursiveTree):
     def fib_nums(self):
         fib = [1, 1]
 
-        for _ in range(self.params.num_layers):
+        for _ in range(self.options.num_layers):
             fib.append(fib[-1] + fib[-2])
 
         return fib
     
     def generate_branch_nums(self):
         branch_nums = [[1]]
-        for i in range(self.params.num_layers):
+        for i in range(self.options.num_layers):
             num_branches = self.fib[i + 2]
             num_parents = sum(branch_nums[-1])
 
@@ -265,15 +235,15 @@ class FibonacciTree(RecursiveTree):
         return branch_nums
     
     def draw_branch(self, x, y, layer_inx, branch_inx, length, width, theta):
-        if layer_inx > self.params.num_layers:
-            leaf = Leaves(self.window, (x, y), self.params)
+        if layer_inx > self.options.num_layers:
+            leaf = Leaves(self.window, (x, y), self.options)
             leaf.draw()
 
             return
         
         end_x, end_y = self.get_end_coords(x, y, length, theta)
 
-        self.window.draw_line((x, y), (end_x, end_y), FibonacciTree.BRANCH_COLOUR, round(width), self.params)
+        self.window.draw_line((x, y), (end_x, end_y), FibonacciTree.BRANCH_COLOUR, round(width), self.options)
 
         self.draw_end_branches(x, y, layer_inx, branch_inx, length, width, theta)
 
@@ -285,7 +255,7 @@ class FibonacciTree(RecursiveTree):
         x, y = self.get_end_coords(start_x, start_y, length, theta)
 
         for i in range(num_branches):
-            angle = random.normalvariate(self.params.angle_mean, FibonacciTree.ANGLE_STD_DEV)
+            angle = random.normalvariate(self.options.angle_mean, FibonacciTree.ANGLE_STD_DEV)
             new_theta = theta + sign * angle
 
             new_len = length * FibonacciTree.LEN_SCALE
@@ -300,13 +270,13 @@ class FibonacciTree(RecursiveTree):
         self.draw_box()
         self.draw_tree_base(initial_width)
 
-        self.draw_branch(self.root_x, self.root_y, 1, 0, self.params.initial_len, initial_width, initial_angle)
+        self.draw_branch(self.root_x, self.root_y, 1, 0, self.options.initial_len, initial_width, initial_angle)
 
 
 class OffsetFibTree(FibonacciTree):
     #similar to fibonacci tree, but branches grow from the middle of the parent branch
-    def __init__(self, window, root_pos, params):
-        super().__init__(window, root_pos, params)
+    def __init__(self, window, root_pos, options):
+        super().__init__(window, root_pos, options)
 
     def draw_end_branches(self, start_x, start_y, layer_inx, branch_inx, length, width, theta):
         sign = 1
@@ -319,7 +289,7 @@ class OffsetFibTree(FibonacciTree):
 
         for i in range(num_branches):
             dist_up_branch = (i + 1) * step
-            new_theta = theta + sign * random.normalvariate(self.params.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
+            new_theta = theta + sign * random.normalvariate(self.options.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
 
             x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)
 
@@ -335,8 +305,8 @@ class RandomOffsetFibTree(FibonacciTree):
     NON_END_MIN = 0.3
     NON_END_MAX = 0.9
 
-    def __init__(self, window, root_pos, params):
-        super().__init__(window, root_pos, params)
+    def __init__(self, window, root_pos, options):
+        super().__init__(window, root_pos, options)
 
     def draw_end_branches(self, start_x, start_y, layer_inx, branch_inx, length, width, theta):
         sign = 1
@@ -355,7 +325,7 @@ class RandomOffsetFibTree(FibonacciTree):
             else:
                 dist_up_branch = random.uniform(length * RandomOffsetFibTree.NON_END_MIN, length * RandomOffsetFibTree.NON_END_MAX)
 
-            new_theta = theta + sign * random.normalvariate(self.params.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
+            new_theta = theta + sign * random.normalvariate(self.options.angle_mean, OffsetFibTree.ANGLE_STD_DEV)
 
             x, y = self.get_end_coords(start_x, start_y, dist_up_branch, theta)
 
@@ -367,17 +337,17 @@ class RandomOffsetFibTree(FibonacciTree):
             #no branches have grown at the end of this one, so we can grow leaves
             end_pos = self.get_end_coords(start_x, start_y, length, theta)
 
-            leaves = Leaves(self.window, end_pos, self.params)
+            leaves = Leaves(self.window, end_pos, self.options)
             leaves.draw()
 
 
 class Leaves:
     NUM_LEAVES = 4
 
-    def __init__(self, window, branch_end, params):
+    def __init__(self, window, branch_end, options):
         self.window = window
         self.branch_x, self.branch_y = branch_end
-        self.params = params
+        self.options = options
 
     def draw(self):
         g = utils.Vector(0, -1)
@@ -387,16 +357,16 @@ class Leaves:
             vel.normalise()
             pos = utils.Vector(self.branch_x, self.branch_y)
 
-            for i in range(self.params.leaf_len):
+            for i in range(self.options.leaf_len):
                 pos += vel
 
                 colour = (0, random.randint(75, 255), 0)
-                char = random.choice(self.params.leaf_chars)
+                char = random.choice(self.options.leaf_chars)
 
-                if self.params.instant:
+                if self.options.instant:
                     self.window.set_char_instant(pos.x, pos.y, char, colour, False)
                 else:
-                    self.window.set_char_wait(pos.x, pos.y, char, colour, False, self.params.wait_time)
+                    self.window.set_char_wait(pos.x, pos.y, char, colour, False, self.options.wait_time)
 
-                weight = i / self.params.leaf_len
+                weight = i / self.options.leaf_len
                 vel += g * weight
