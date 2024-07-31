@@ -1,21 +1,8 @@
 import math
 
 
-class Coordinate:
-    CHAR_WIDTH = 1
-    CHAR_HEIGHT = 2
-
-    def __init__(self, x, y, screen_coord):
-        #coords can either be plane coords: (0, 0) is bottom left, or screen coords (0, 0) is top left
-        self.x = x
-        self.y = y
-
-        self.screen_coord = screen_coord
-
-    
-
-
 class Line:
+    #line in form y = mx + c
     def __init__(self):
         self.start = None
         self.end = None
