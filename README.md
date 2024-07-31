@@ -4,7 +4,7 @@ PyBonsai is a Python script that generates procedural ASCII art trees in the com
 
 ## About :seedling:
 
-<img src="/Images/demo.gif" align="right" width="450px">
+<img src="Images/demo.gif" align="right" width="450px">
 
 PyBonsai is inspired by the amazing [cbonsai](https://gitlab.com/jallbrit/cbonsai) repository.
 Whereas cbonsai grows bonsai trees, PyBonsai trees look more like trees you would find in a forest (oak, ash and so on).
@@ -20,6 +20,7 @@ If you encounter an issue with PyBonsai, or have an idea for an improvement, do 
 ## Installation :link:
 
 Requirements:
+
 - Python 3.9 or greater
 
 To use PyBonsai, you need to first clone the repository:
@@ -37,9 +38,57 @@ Verify the installation by running:
 
     pybonsai --version
 
-### Windows and Mac OS
+### Windows
 
-Please note that I have only tested PyBonsai on Ubuntu, but I see no reason why it would not work on Windows or Mac OS.
+After cloning the repository you need to follow these steps in order to run PyBonsai in your terminal:
+
+1. Install the `pyinstaller` package
+
+```
+pip install pyinstaller
+```
+
+> We recommend to run the terminal in admin mode to prevent errors while installing `pyinstaller`
+
+2. Change to the directory containing the cloned repo and run the `pyinstaller` command on `main.py`
+
+```
+cd directory-that-contains-pybonsai
+pyinstaller main.py
+```
+
+This will create a new `dist` folder with an executable of the PyBonsai, you can test it by changing to the `dist` folder and running `main.exe`
+
+```
+cd dist
+main.exe
+```
+
+You should see something like this:
+
+<img src="Images/demo-windows.gif" width="450px">
+
+<br />
+
+Now rename the `main.exe` to `pybonsai.exe`
+
+3. Copy the path of the `dist` folder and add it to your `Path` environment variable
+
+<img src="Images/env-example.png" width="450px">
+
+<br />
+
+And that's it, now you can run PyBonsai from anywhere in your terminal with the command `pybonsai.exe` or simply `pybonsai`
+
+You can even pass flags
+
+```
+pybonsai --layers 10
+```
+
+### Mac OS
+
+Please note that I have only tested PyBonsai on Ubuntu, but I see no reason why it would not work on Mac OS.
 To install PyBonsai, you will need to clone the repository and add it to your system's PATH.
 
 ## Useage :wrench:
@@ -68,8 +117,8 @@ Run `pybonsai --help` for useage:
 
 The following images demonstrate the use of the different options:
 
-| Effect               | Image                                      |
-|----------------------|--------------------------------------------|
+| Effect               | Image                                              |
+| -------------------- | -------------------------------------------------- |
 | Big tree             | ![big tree](/Images/options/big.png)               |
 | Different characters | ![different characters](/Images/options/chars.png) |
 | Longer leaves        | ![longer leaves](/Images/options/leafy.png)        |
@@ -80,9 +129,9 @@ PyBonsai supports 4 different tree types. Unless specified with the `--type` opt
 
 All tree types are generated recursively and are, essentially, variations on [this](https://www.youtube.com/watch?v=0jjeOYMjmDU) basic fractal tree.
 
-| Type             | Image        | Description                                                                                  |
-|------------------|--------------|----------------------------------------------------------------------------------------------|
-| Classic          | ![classic](/Images/types/classic.png) | The number of child branches is normally distributed with $\mu = 2$ and $\sigma = 0.5$. |
-| Fibonacci        | ![fib](/Images/types/fib.png) | The number of branches on the $n^{th}$ layer is the $n^{th}$ fibonacci number. |
-| Offset fibonacci | ![offset fib](/Images/types/offset_fib.png) | Similar to above, except child branches grow in the middle of the parent as well as the end. |
-| Random fibonacci | ![random fib](/Images/types/rand_fib.png) | Similar to above, except child branches grow at random positions on the parent and leaves can grow in the middle layers. |
+| Type             | Image                                       | Description                                                                                                              |
+| ---------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Classic          | ![classic](/Images/types/classic.png)       | The number of child branches is normally distributed with $\mu = 2$ and $\sigma = 0.5$.                                  |
+| Fibonacci        | ![fib](/Images/types/fib.png)               | The number of branches on the $n^{th}$ layer is the $n^{th}$ fibonacci number.                                           |
+| Offset fibonacci | ![offset fib](/Images/types/offset_fib.png) | Similar to above, except child branches grow in the middle of the parent as well as the end.                             |
+| Random fibonacci | ![random fib](/Images/types/rand_fib.png)   | Similar to above, except child branches grow at random positions on the parent and leaves can grow in the middle layers. |
