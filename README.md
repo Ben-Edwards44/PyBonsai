@@ -95,25 +95,32 @@ To install PyBonsai, you will need to clone the repository and add it to your sy
 
 Run `pybonsai --help` for useage:
 
-    USEAGE: pybonsai [OPTION]...
+    USEAGE pybonsai [OPTION]...
 
     PyBonsai procedurally generates ASCII art trees in your terminal.
 
     OPTIONS:
-    -h, --help           display help
-        --version        display version
-    -i, --instant        instant mode: display finished tree immediately
-    -c, --branch-chars   string of chars randomly chosen for branches [default ~;:=]
-    -C, --leaf-chars     string of chars randomly chosen for leaves [default &%#@]
-    -w, --wait           time delay between drawing characters when not in instant mode [default 0]
-    -x, --width          maximum width of the tree [default 80]
-    -y, --height         maximum height of the tree [default 35]
-    -t, --type           tree type: integer between 0 and 3 inclusive [default random]
-    -s, --seed           seed for the random number generator
-    -S, --start-len      length of the root branch [default 15]
-    -L, --leaf-len       length of each leaf [default 4]
-    -l, --layers         number of branch layers: more => more branches [default 8]
-    -a, --angle          mean angle of branches to their parent, in degrees; more => more arched trees [default 40]
+        -h, --help            display help
+            --version         display version
+
+        -s, --seed            seed for the random number generator
+
+        -i, --instant         instant mode: display finished tree immediately
+        -w, --wait            time delay between drawing characters when not in instant mode [default 0]
+
+        -c, --branch-chars    string of chars randomly chosen for branches [default "~;:="]
+        -C, --leaf-chars      string of chars randomly chosen for leaves [default "&%#@"]
+
+        -x, --width           maximum width of the tree [default 80]
+        -y, --height          maximum height of the tree [default 35]
+
+        -t, --type            tree type: integer between 0 and 3 inclusive [default random]
+        -S, --start-len       length of the root branch [default 15]
+        -L, --leaf-len        length of each leaf [default 4]
+        -l, --layers          number of branch layers: more => more branches [default 8]
+        -a, --angle           mean angle of branches to their parent, in degrees; more => more arched trees [default 40]
+
+        -f, --fixed-window    do not allow window height to increase when tree grows off screen
 
 The following images demonstrate the use of the different options:
 
