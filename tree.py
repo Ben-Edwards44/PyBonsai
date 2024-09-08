@@ -171,7 +171,7 @@ class ClassicTree(RecursiveTree):
         
         end_x, end_y = self.get_end_coords(x, y, length, theta)
 
-        self.window.draw_line((x, y), (end_x, end_y), ClassicTree.BRANCH_COLOUR, round(width), self.options)
+        self.window.draw_line((x, y), (end_x, end_y), ClassicTree.BRANCH_COLOUR, round(width))
 
         self.draw_end_branches(x, y, layer, length, width, theta)
 
@@ -246,7 +246,7 @@ class FibonacciTree(RecursiveTree):
         
         end_x, end_y = self.get_end_coords(x, y, length, theta)
 
-        self.window.draw_line((x, y), (end_x, end_y), FibonacciTree.BRANCH_COLOUR, round(width), self.options)
+        self.window.draw_line((x, y), (end_x, end_y), FibonacciTree.BRANCH_COLOUR, round(width))
 
         self.draw_end_branches(x, y, layer_inx, branch_inx, length, width, theta)
 

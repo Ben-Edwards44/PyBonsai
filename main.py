@@ -56,6 +56,8 @@ class Options:
     WINDOW_WIDTH = 80
     WINDOW_HEIGHT = 35
 
+    FIXED = False
+
     OPTION_DESCS = f"""
 OPTIONS:
     -h, --help            display help
@@ -77,6 +79,8 @@ OPTIONS:
     -L, --leaf-len        length of each leaf [default {LEAF_LEN}]
     -l, --layers          number of branch layers: more => more branches [default {NUM_LAYERS}]
     -a, --angle           mean angle of branches to their parent, in degrees; more => more arched trees [default {ANGLE_MEAN}]
+
+    -f, --fixed-window    do not allow window height to increase when tree grows off screen
     """
 
     SHORT_OPTIONS = {
@@ -92,7 +96,8 @@ OPTIONS:
         "-S" : "--start-len",
         "-L" : "--leaf-len",
         "-l" : "--layers",
-        "-a" : "--angle"
+        "-a" : "--angle",
+        "-f" : "--fixed-window"
     }
     
     def __init__(self):
@@ -111,6 +116,8 @@ OPTIONS:
 
         self.user_set_type = False
         self.type = random.randint(0, 3)
+
+        self.fixed_window = Options.FIXED
 
         self.window_width, self.window_height = self.get_default_window()
 
@@ -162,6 +169,8 @@ OPTIONS:
                 self.show_version()
             case "--seed":
                 self.set_seed(int(value))
+            case "--fixed-window":
+                self.fixed_window = True
             case _:
                 self.show_invalid(option_name)
 
@@ -260,7 +269,7 @@ def get_tree(window, options):
 def main():
     args = parse_args()
     options = get_options(args)
-    window = draw.TerminalWindow(options.window_width, options.window_height)
+    window = draw.TerminalWindow(options.window_width, options.window_height, options)
 
     t = get_tree(window, options)
 

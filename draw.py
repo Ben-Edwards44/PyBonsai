@@ -18,9 +18,11 @@ class TerminalWindow:
 
     BACKGROUND_CHAR = " "
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, options):
         self.width = width
         self.height = height
+
+        self.options = options
 
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(width)] for _ in range(height)]
 
@@ -83,10 +85,15 @@ class TerminalWindow:
         return scaled_x, scaled_y
     
     def increase_height(self, delta_height):
+        if self.options.fixed_window:
+            return False
+        
         self.height += delta_height
 
         for _ in range(delta_height):
             self.chars.insert(0, [TerminalWindow.BACKGROUND_CHAR for _ in range(self.width)])
+
+        return True
 
     def set_char_instant(self, x, y, char, colour, is_screen_coords):
         if not is_screen_coords:
@@ -94,8 +101,10 @@ class TerminalWindow:
 
         #check the point will fit
         if x < 0:
-            self.increase_height(abs(x))
-            x = 0
+            height_changed = self.increase_height(abs(x))
+
+            if height_changed:
+                x = 0
 
         if not 0 <= x < self.height or not 0 <= y < self.width:
             return
@@ -140,7 +149,7 @@ class TerminalWindow:
         else:
             raise Exception("Invalid colour argument")
         
-    def draw_steep_line(self, start, end, colour, width, params, char, mid_line):
+    def draw_steep_line(self, start, end, colour, width, char, mid_line):
         start_inx, _ = self.plane_to_screen(*start)
         end_inx, _ = self.plane_to_screen(*end)
 
@@ -164,18 +173,18 @@ class TerminalWindow:
                     break
 
                 if random.uniform(0, 1) < CHAR_THRESHOLD:
-                    chosen_char = random.choice(params.branch_chars)
+                    chosen_char = random.choice(self.options.branch_chars)
                 else:
                     chosen_char = char
 
                 chosen_colour = self.choose_colour(colour)
 
-                if params.instant:
+                if self.options.instant:
                     self.set_char_instant(inx1, dists[i][1], chosen_char, chosen_colour, True)
                 else:
-                    self.set_char_wait(inx1, dists[i][1], chosen_char, chosen_colour, True, params.wait_time)
+                    self.set_char_wait(inx1, dists[i][1], chosen_char, chosen_colour, True, self.options.wait_time)
 
-    def draw_shallow_line(self, start, end, colour, width, params, char, mid_line):
+    def draw_shallow_line(self, start, end, colour, width, char, mid_line):
         _, start_inx = self.plane_to_screen(*start)
         _, end_inx = self.plane_to_screen(*end)
 
@@ -199,19 +208,19 @@ class TerminalWindow:
                     break
 
                 if random.uniform(0, 1) < CHAR_THRESHOLD:
-                    chosen_char = random.choice(params.branch_chars)
+                    chosen_char = random.choice(self.options.branch_chars)
                 else:
                     chosen_char = char
 
                 chosen_colour = self.choose_colour(colour)
 
-                if params.instant:
+                if self.options.instant:
                     self.set_char_instant(dists[i][1], inx2, chosen_char, chosen_colour, True)
                 else:
-                    self.set_char_wait(dists[i][1], inx2, chosen_char, chosen_colour, True, params.wait_time)
+                    self.set_char_wait(dists[i][1], inx2, chosen_char, chosen_colour, True, self.options.wait_time)
 
     def check_line_bounds(self, start, end):
-        #if the line will not fit in the current window, update the window size so that it will
+        #if the line will not fit in the current window, update the window size so that it willoptions
         h1, _ = self.plane_to_screen(*start)
         h2, _ = self.plane_to_screen(*end)
 
@@ -220,7 +229,7 @@ class TerminalWindow:
         if room_from_top < 0:
             self.increase_height(abs(room_from_top))
     
-    def draw_line(self, start, end, colour, width, params):
+    def draw_line(self, start, end, colour, width):
         mid_line = utils.Line()
         mid_line.set_end_points(start, end)
 
@@ -229,6 +238,6 @@ class TerminalWindow:
         self.check_line_bounds(start, end)
 
         if mid_line.is_vertical or abs(mid_line.m) >= 1:
-            self.draw_steep_line(start, end, colour, width, params, char, mid_line)
+            self.draw_steep_line(start, end, colour, width, char, mid_line)
         else:
-            self.draw_shallow_line(start, end, colour, width, params, char, mid_line)
+            self.draw_shallow_line(start, end, colour, width, char, mid_line)
