@@ -144,7 +144,7 @@ class RecursiveTree(Tree):
         return x, y
     
     def get_initial_params(self):
-        initial_width = self.options.initial_len // 6
+        initial_width = self.options.initial_len // 5
         initial_angle = random.normalvariate(0, RecursiveTree.ANGLE_STD_DEV)
 
         #ensure the width is in a suitable range
