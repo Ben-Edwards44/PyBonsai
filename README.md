@@ -112,7 +112,7 @@ Run `pybonsai --help` for useage:
         -C, --leaf-chars      string of chars randomly chosen for leaves [default "&%#@"]
 
         -x, --width           maximum width of the tree [default 80]
-        -y, --height          maximum height of the tree [default 35]
+        -y, --height          maximum height of the tree [default 25]
 
         -t, --type            tree type: integer between 0 and 3 inclusive [default random]
         -S, --start-len       length of the root branch [default 15]

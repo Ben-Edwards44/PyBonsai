@@ -33,7 +33,7 @@ from math import radians
 from os import get_terminal_size
 
 
-VERSION = "1.2.1"
+VERSION = "1.2.2"
 DESC = "PyBonsai procedurally generates ASCII art trees in your terminal."
 
 
@@ -54,7 +54,7 @@ class Options:
     LEAF_CHARS = "&%#@"
 
     WINDOW_WIDTH = 80
-    WINDOW_HEIGHT = 35
+    WINDOW_HEIGHT = 25
 
     FIXED = False
 
@@ -257,7 +257,7 @@ def get_options(args):
 def get_tree(window, options):
     root_x = window.width // 2
 
-    root_y = tree.Tree.BOX_HEIGHT + 6
+    root_y = tree.Tree.BOX_HEIGHT + 4
     root_y = root_y + root_y % 2  #round to nearest even number (odd numbers cause off-by-one errors as chars are twice as tall as they are wide)
 
     root_pos = (root_x, root_y)
