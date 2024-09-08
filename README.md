@@ -48,7 +48,7 @@ After cloning the repository you need to follow these steps in order to run PyBo
 pip install pyinstaller
 ```
 
-> We recommend to run the terminal in admin mode to prevent errors while installing `pyinstaller`
+> You may need to run the terminal in admin mode while installing `pyinstaller`
 
 2. Change to the directory containing the cloned repo and run the `pyinstaller` command on `main.py`
 
@@ -78,7 +78,7 @@ Now rename the `main.exe` to `pybonsai.exe`
 
 <br />
 
-And that's it, now you can run PyBonsai from anywhere in your terminal with the command `pybonsai.exe` or simply `pybonsai`
+Now you can run PyBonsai with the command `pybonsai.exe` or `pybonsai`
 
 You can even pass flags
 
@@ -86,9 +86,9 @@ You can even pass flags
 pybonsai --layers 10
 ```
 
-### Mac OS
+### MacOS
 
-Please note that I have only tested PyBonsai on Ubuntu, but I see no reason why it would not work on Mac OS.
+Please note that PyBonsai has not been tested on MacOS, but I see no reason why it would not work on Mac OS.
 To install PyBonsai, you will need to clone the repository and add it to your system's PATH.
 
 ## Useage :wrench:
