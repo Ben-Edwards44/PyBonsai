@@ -33,7 +33,7 @@ from math import radians
 from os import get_terminal_size
 
 
-VERSION = "1.1.0"
+VERSION = "1.2.1"
 DESC = "PyBonsai procedurally generates ASCII art trees in your terminal."
 
 
@@ -205,7 +205,15 @@ def parse_args():
     for i, x in enumerate(args):
         if x[0] == "-":
             value = get_arg_value(args, i)
-            arg_values[x] = value
+
+            is_short = x[1] != "-"
+
+            if is_short and len(x) > 2:
+                #multiple flags have been set at once (e.g. pybonsai -fi)
+                for y in x[1:]:
+                    arg_values[f"-{y}"] = value
+            else:
+                arg_values[x] = value
 
     return arg_values
 
