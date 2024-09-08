@@ -266,6 +266,7 @@ def main():
 
     t.draw()
     window.draw()
+    window.reset_cursor()
 
 
 if __name__ == "__main__":

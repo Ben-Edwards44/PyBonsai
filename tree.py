@@ -72,7 +72,7 @@ class Tree:
         self.draw_all_mounds(root_inx1, root_inx2)  #must be called after the top layer has been drawn normally
 
     def draw_box_feet(self, root_inx1, root_inx2):
-        #draw feet for the box
+        #draw feet for the box        
         inx1 = root_inx1 + Tree.BOX_HEIGHT
         offset = self.box_top_width // 2 - Tree.BOX_HEIGHT - 1
 
@@ -81,8 +81,7 @@ class Tree:
             self.window.set_char_instant(inx1, inx2, "‾", Tree.BOX_COLOUR, True)
 
     def draw_all_mounds(self, root_inx1, root_inx2):
-        #draw .---._____.--. on top layer
-
+        #draw .---._____.--. on top layer      
         num_drawn = 0
         for i in range(1, self.box_top_width):
             inx2 = root_inx2 - self.box_top_width // 2 + i
@@ -125,6 +124,7 @@ class Tree:
         self.window.set_char_instant(inx1, left_x - 1, "/", (255, 255, 0), True)
         self.window.set_char_instant(inx1, right_x + 1, "\\", (255, 255, 0), True)
         self.window.set_char_instant(inx1, right_x + 2, ".", (255, 255, 0), True)
+
 
 class RecursiveTree(Tree):
     #all recursive tree types are based off of the fractal canopy: https://en.wikipedia.org/wiki/Fractal_canopy

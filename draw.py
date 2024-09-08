@@ -22,8 +22,6 @@ class TerminalWindow:
         self.width = width
         self.height = height
 
-        self.needs_clear = False
-
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(width)] for _ in range(height)]
 
     colour_char = lambda self, char, r, g, b: f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}"  #ANSI escape code for 24 bit true colour (which most modern terminals support)
@@ -52,15 +50,17 @@ class TerminalWindow:
     def draw(self):
         print(HIDE_CURSOR, end="")
 
-        if self.needs_clear:
-            print(f"\033[{self.height}A", end="")  #move cursor to the top
-
         for i in self.chars:
             print("".join(i))
 
+        print(f"\033[{self.height}A", end="")  #move cursor to the top after we have finished
         print(SHOW_CURSOR, end="")
 
         self.needs_clear = True
+
+    def reset_cursor(self):
+        #cursor will have been left at the top from drawing, so we need to place it back at the bottom
+        print(f"\033[{self.height}B", end="")
 
     def plane_to_screen(self, x, y):
         #convert cartesian coords to array indices
@@ -81,12 +81,23 @@ class TerminalWindow:
         scaled_y = swapped_y * TerminalWindow.CHAR_HEIGHT
 
         return scaled_x, scaled_y
+    
+    def increase_height(self, delta_height):
+        self.height += delta_height
+
+        for _ in range(delta_height):
+            self.chars.insert(0, [TerminalWindow.BACKGROUND_CHAR for _ in range(self.width)])
 
     def set_char_instant(self, x, y, char, colour, is_screen_coords):
         if not is_screen_coords:
             x, y = self.plane_to_screen(x, y)
 
-        if not 0 < x < self.height or not 0 < y < self.width:
+        #check the point will fit
+        if x < 0:
+            self.increase_height(abs(x))
+            x = 0
+
+        if not 0 <= x < self.height or not 0 <= y < self.width:
             return
 
         coloured = self.colour_char(char, colour[0], colour[1], colour[2])
@@ -198,12 +209,24 @@ class TerminalWindow:
                     self.set_char_instant(dists[i][1], inx2, chosen_char, chosen_colour, True)
                 else:
                     self.set_char_wait(dists[i][1], inx2, chosen_char, chosen_colour, True, params.wait_time)
+
+    def check_line_bounds(self, start, end):
+        #if the line will not fit in the current window, update the window size so that it will
+        h1, _ = self.plane_to_screen(*start)
+        h2, _ = self.plane_to_screen(*end)
+
+        room_from_top = min(h1, h2)
+
+        if room_from_top < 0:
+            self.increase_height(abs(room_from_top))
     
     def draw_line(self, start, end, colour, width, params):
         mid_line = utils.Line()
         mid_line.set_end_points(start, end)
 
         char = self.get_line_char(mid_line)
+
+        self.check_line_bounds(start, end)
 
         if mid_line.is_vertical or abs(mid_line.m) >= 1:
             self.draw_steep_line(start, end, colour, width, params, char, mid_line)
