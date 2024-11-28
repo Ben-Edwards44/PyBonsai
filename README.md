@@ -91,7 +91,7 @@ pybonsai --layers 10
 Please note that PyBonsai has not been tested on MacOS, but I see no reason why it would not work on Mac OS.
 To install PyBonsai, you will need to clone the repository and add it to your system's PATH.
 
-## Useage :wrench:
+## Usage :wrench:
 
 Run `pybonsai --help` for useage:
 
