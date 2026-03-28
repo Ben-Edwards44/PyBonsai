@@ -1,6 +1,7 @@
 import math
 import utils
 import random
+from sys import stdout
 from time import sleep
 
 
@@ -26,7 +27,9 @@ class TerminalWindow:
 
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(width)] for _ in range(height)]
 
-    colour_char = lambda self, char, r, g, b: f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}"  #ANSI escape code for 24 bit true colour (which most modern terminals support)
+    colour_char = lambda self, char, r, g, b: (
+        f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}" if stdout.isatty() else char
+    )  #ANSI escape code for 24 bit true colour (which most modern terminals support)
 
     def extract_colour(self, coloured_char):
         #get the rgb colour from an ANSI coloured character
@@ -50,19 +53,22 @@ class TerminalWindow:
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(self.width)] for _ in range(self.height)]
 
     def draw(self):
-        print(HIDE_CURSOR, end="")
+        if stdout.isatty():
+            print(HIDE_CURSOR, end="")
 
         for i in self.chars:
             print("".join(i))
 
-        print(f"\033[{self.height}A", end="")  #move cursor to the top after we have finished
-        print(SHOW_CURSOR, end="")
+        if stdout.isatty():
+            print(f"\033[{self.height}A", end="")  #move cursor to the top after we have finished
+            print(SHOW_CURSOR, end="")
 
         self.needs_clear = True
 
     def reset_cursor(self):
         #cursor will have been left at the top from drawing, so we need to place it back at the bottom
-        print(f"\033[{self.height}B", end="")
+        if stdout.isatty():
+            print(f"\033[{self.height}B", end="")
 
     def plane_to_screen(self, x, y):
         #convert cartesian coords to array indices

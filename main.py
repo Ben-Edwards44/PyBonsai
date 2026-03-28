@@ -29,6 +29,7 @@ import tree
 
 import random
 from sys import argv
+from sys import stdout
 from math import radians
 from os import get_terminal_size
 
@@ -123,12 +124,14 @@ OPTIONS:
 
     def get_default_window(self):
         #ensure the default values fit the current terminal size
-        width, height = get_terminal_size()
+        if stdout.isatty():
+            width, height = get_terminal_size()
+        else:
+            width, height = 80, 25
 
         #check the default values fit the current terminal
         width = min(width, Options.WINDOW_WIDTH)
         height = min(height, Options.WINDOW_HEIGHT)
-
         return width, height
     
     def set_option(self, option_name, value):
