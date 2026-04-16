@@ -27,9 +27,11 @@ class TerminalWindow:
 
         self.chars = [[TerminalWindow.BACKGROUND_CHAR for _ in range(width)] for _ in range(height)]
 
-    colour_char = lambda self, char, r, g, b: (
-        f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}" if stdout.isatty() else char
-    )  #ANSI escape code for 24 bit true colour (which most modern terminals support)
+    def colour_char(self, char, r, g, b):
+        if stdout.isatty():
+            return f"\033[38;2;{r};{g};{b}m{char}{END_COLOUR}"  #ANSI escape code for 24 bit true colour (which most modern terminals support)
+        else:
+            return char
 
     def extract_colour(self, coloured_char):
         #get the rgb colour from an ANSI coloured character

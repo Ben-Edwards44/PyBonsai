@@ -34,7 +34,7 @@ from math import radians
 from os import get_terminal_size
 
 
-VERSION = "1.2.2"
+VERSION = "1.2.4"
 DESC = "PyBonsai procedurally generates ASCII art trees in your terminal."
 
 
@@ -127,7 +127,8 @@ OPTIONS:
         if stdout.isatty():
             width, height = get_terminal_size()
         else:
-            width, height = 80, 25
+            width = Options.WINDOW_WIDTH
+            height = Options.WINDOW_HEIGHT
 
         #check the default values fit the current terminal
         width = min(width, Options.WINDOW_WIDTH)
