@@ -161,7 +161,7 @@ OPTIONS:
             case "--leaf-chars":
                 self.leaf_chars = parse_string(value)
             case "--type":
-                self.type = int(value)
+                self.type = self.parse_type(value)
                 self.user_set_type = True
             case "--width":
                 self.window_width = int(value)
@@ -193,6 +193,19 @@ OPTIONS:
     def show_invalid(self, option_name):
         raise Exception(f"Invalid option: {option_name}. Use pybonsai --help for useage.")
     
+    @staticmethod
+    def parse_type(value):
+        #--type documents "integer between 0 and 3 inclusive"
+        if isinstance(value, bool):
+            raise Exception("Invalid option: --type requires an integer between 0 and 3 inclusive. Use pybonsai --help for useage.")
+        try:
+            tree_type = int(value)
+        except (TypeError, ValueError):
+            raise Exception(f"Invalid option: --type must be an integer between 0 and 3 inclusive, got {value!r}. Use pybonsai --help for useage.")
+        if tree_type < 0 or tree_type > 3:
+            raise Exception(f"Invalid option: --type must be an integer between 0 and 3 inclusive, got {value!r}. Use pybonsai --help for useage.")
+        return tree_type
+
     def set_seed(self, seed):
         random.seed(seed)
 
